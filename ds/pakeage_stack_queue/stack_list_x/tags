@@ -1,0 +1,32 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.6	//
+ERRP	./stack.h	12;"	d
+MAX	./stack.h	9;"	d
+STACK_LIST	./stack.h	/^}STACK_LIST;$/;"	t	typeref:struct:stack_t
+__STACK_LIST_H__	./stack.h	2;"	d
+data	./stack.h	/^	void *data;$/;"	m	struct:node_t
+data_t	./main.c	/^struct data_t$/;"	s	file:
+head	./stack.h	/^	struct node_t head;$/;"	m	struct:stack_t	typeref:struct:stack_t::node_t
+ls	./main.c	/^void ls(void *data)$/;"	f
+main	./main.c	/^int main(void)$/;"	f
+next	./stack.h	/^	struct node_t *next;$/;"	m	struct:node_t	typeref:struct:node_t::node_t
+node_t	./stack.h	/^struct node_t$/;"	s
+num	./main.c	/^	int num;$/;"	m	struct:data_t	file:
+prev	./stack.h	/^	struct node_t *prev;$/;"	m	struct:node_t	typeref:struct:node_t::node_t
+size	./stack.h	/^	int size;$/;"	m	struct:stack_t
+stack_create	./stack.c	/^STACK_LIST *stack_create(int size)$/;"	f
+stack_destory	./stack.c	/^void stack_destory(STACK_LIST *handle)$/;"	f
+stack_is_empty	./stack.c	/^int stack_is_empty(STACK_LIST *handle)\/\/判断是否是空栈$/;"	f
+stack_load	./stack.c	/^STACK_LIST *stack_load(const char *path)$/;"	f
+stack_num	./stack.c	/^int stack_num(STACK_LIST *handle)$/;"	f
+stack_op_t	./stack.h	/^typedef void (stack_op_t)(void *);$/;"	t
+stack_pop	./stack.c	/^void *stack_pop(STACK_LIST *handle)$/;"	f
+stack_push	./stack.c	/^void stack_push(void *data, STACK_LIST *handle)$/;"	f
+stack_store	./stack.c	/^void stack_store(const char *path, STACK_LIST *handle)$/;"	f
+stack_t	./stack.h	/^typedef struct stack_t{$/;"	s
+stack_travel	./stack.c	/^void stack_travel(STACK_LIST *handle, stack_op_t *op)$/;"	f
+top	./stack.h	/^	int top;$/;"	m	struct:stack_t

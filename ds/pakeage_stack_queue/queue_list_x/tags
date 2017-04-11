@@ -1,0 +1,32 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.6	//
+ERRP	./queue.h	12;"	d
+MAX	./queue.h	9;"	d
+QUEUE_LIST	./queue.h	/^}QUEUE_LIST;$/;"	t	typeref:struct:queue_t
+__QUEUE_LIST_H__	./queue.h	2;"	d
+count	./queue.h	/^	int count;$/;"	m	struct:queue_t
+data	./queue.h	/^	void *data;$/;"	m	struct:node_t
+data_t	./main.c	/^struct data_t$/;"	s	file:
+head	./queue.h	/^	struct node_t head;$/;"	m	struct:queue_t	typeref:struct:queue_t::node_t
+ls	./main.c	/^void ls(void *data)$/;"	f
+main	./main.c	/^int main(void)$/;"	f
+next	./queue.h	/^	struct node_t *next;$/;"	m	struct:node_t	typeref:struct:node_t::node_t
+node_t	./queue.h	/^struct node_t$/;"	s
+num	./main.c	/^	int num;$/;"	m	struct:data_t	file:
+prev	./queue.h	/^	struct node_t *prev;$/;"	m	struct:node_t	typeref:struct:node_t::node_t
+queue_create	./queue.c	/^QUEUE_LIST *queue_create(int size)$/;"	f
+queue_de	./queue.c	/^void *queue_de(QUEUE_LIST *handle)$/;"	f
+queue_destory	./queue.c	/^void queue_destory(QUEUE_LIST *handle)$/;"	f
+queue_is_empty	./queue.c	/^int queue_is_empty(QUEUE_LIST *handle)\/\/判断是否是空队列$/;"	f
+queue_load	./queue.c	/^QUEUE_LIST *queue_load(const char *path)$/;"	f
+queue_num	./queue.c	/^int queue_num(QUEUE_LIST *handle)$/;"	f
+queue_op_t	./queue.h	/^typedef void (queue_op_t)(void *);$/;"	t
+queue_qe	./queue.c	/^void queue_qe(void *data, QUEUE_LIST *handle)$/;"	f
+queue_store	./queue.c	/^void queue_store(const char *path, QUEUE_LIST *handle)$/;"	f
+queue_t	./queue.h	/^typedef struct queue_t{$/;"	s
+queue_travel	./queue.c	/^void queue_travel(QUEUE_LIST *handle, queue_op_t *op)$/;"	f
+size	./queue.h	/^	int size;$/;"	m	struct:queue_t

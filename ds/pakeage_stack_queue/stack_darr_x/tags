@@ -1,0 +1,31 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.6	//
+ERRP	./stack.h	12;"	d
+MAX	./stack.h	9;"	d
+STACK	./stack.h	/^}STACK;$/;"	t	typeref:struct:stack_t
+__KEN_STACK_H__	./stack.h	2;"	d
+data	./stack.h	/^	void *data;$/;"	m	struct:stack_t
+ls	./main.c	/^void ls(void *data)$/;"	f
+main	./main.c	/^int main(int argc, char *argv[])$/;"	f
+max	./stack.h	/^	int max;$/;"	m	struct:stack_t
+save	./stack.h	/^	void *save;$/;"	m	struct:stack_t
+size	./stack.h	/^	int size;$/;"	m	struct:stack_t
+stack_clean	./stack.c	/^int stack_clean(STACK *handle)\/\/栈清空$/;"	f
+stack_create	./stack.c	/^STACK *stack_create(int size, int max)\/\/初始化$/;"	f
+stack_destory	./stack.c	/^void stack_destory(STACK *handle)\/\/销毁$/;"	f
+stack_is_empty	./stack.c	/^int stack_is_empty(STACK *handle)\/\/判断是否是空栈$/;"	f
+stack_is_full	./stack.c	/^int stack_is_full(STACK *handle)\/\/判断是否满栈$/;"	f
+stack_load	./stack.c	/^STACK *stack_load(const char *path)\/\/加载$/;"	f
+stack_num	./stack.c	/^int stack_num(STACK *handle)\/\/求栈长度$/;"	f
+stack_op_t	./stack.h	/^typedef void (stack_op_t)(void *);$/;"	t
+stack_pop	./stack.c	/^void *stack_pop(STACK *handle)\/\/出栈$/;"	f
+stack_push	./stack.c	/^void stack_push(void *data, STACK *handle)\/\/入栈$/;"	f
+stack_resize	./stack.c	/^void stack_resize(int new_max, STACK *handle)\/\/栈扩容$/;"	f
+stack_store	./stack.c	/^void stack_store(const char *path, STACK *handle)\/\/存储$/;"	f
+stack_t	./stack.h	/^typedef struct stack_t{$/;"	s
+stack_travel	./stack.c	/^void stack_travel(STACK *handle, stack_op_t *op)\/\/遍历$/;"	f
+top	./stack.h	/^	int top;$/;"	m	struct:stack_t

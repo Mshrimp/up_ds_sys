@@ -1,0 +1,185 @@
+系统编程：就是系统给我们提供一些接口(函数)，通过这些接口编程，就是系统编程
+	windows:	API -> 库
+	linux:		sys -> sys库 -> man 2 
+
+	fopen -> open -> file
+	fread -> read
+
+	涉及系统编程，则代码不可以跨平台
+
+	linux -> .c -> c库 -> exe -> sys库 -> kernel -> 硬件 -> 驱动
+
+	kernel:
+		1 文件系统：
+			windows: MSDOS vfat  fat16 fat32 fat64 ntfs 
+			helloworld123.txt
+			helloworld456.txt 短格式 8.3格式 MSDOS
+							  长格式 支持255个字符 vfat
+			linux:
+				ext2 ext3 ext4 nfs iso9660 fat 
+			就是把设备(硬盘)抽象出来，供用户使用，就是代码实现
+		文件：
+			文件项 inode节点号 数据块
+			文件项：文件名和文件inode节点指针
+			inode节点：也叫文件索引号。存放文件基本属性和存放数据的指针
+			数据块：就是存放文件内容。
+			
+		文件类型：ll
+			文件类型：
+				普通文件: 	-
+				目录文件: 	d
+				字符设备: 	c
+				块设备  ：	b
+				套接子文件: s
+				管道文件:	p
+				软链接文件: l
+			ll 
+			-rw-r--r-- 1 root root     139 05-19 10:36 1.c
+			-rwxr-xr-x 1 root root    4802 05-19 10:36 a.out
+
+			创建一个硬链接：
+				ln src dest
+			创建软链接：
+				ln -s src dest
+
+			ctime: 修改文件属性时间
+			atime: 访问时间
+			mtime: 修改文件内容时间
+	2 进程管理
+		多用户多任务操作系统：
+		多任务：在同一时间段可执行不同进程
+		
+		进程环境
+		进程执行外部命令 exec
+		进程之间通讯：
+			信号：
+			管道：
+				匿名管道：
+				有名管道：file
+			消息队列：
+
+			共享内存：
+			信号量：锁机制
+			套接子：net
+	3 内存管理： 页表存储机制实现
+		物理内存：内存条
+		虚拟内存：平台有关
+			32 -> 4G
+			3-4G:系统态
+				api func
+			0-3G:用户态
+				stack:	局部变量 临时变量 模块变量
+				heap: 	动态内存
+					用户申请空间地址 malloc calloc realloc
+					free
+				DS:
+					BSS: 未初始化全局变量和静态变量
+					RO: 初始化全局变量和静态变量
+				const: 存放常量
+				code: 存放代码
+
+	4 设备管理：实现代码运行，则需要硬件支持。
+		设备驱动
+	5 网络协议：net -> ip
+		tcp UDP
+		
+=======================================
+	sys I/O -> file I/O 2－3天
+	进程:				4－5天
+	线程:				1天
+	网络：				3天
+
+	系统编程：原理 函数
+=====================================
+file IO:操作普通文件  man 3
+	fopen fclose -> setvbuf
+	fgetc / fputc  	表示字符操作  	EOF
+	fgets / fputs  	表示行操作		NULL
+	fread / fwrite 	表示buf操作		0
+
+	fprintf / fscanf	表示格式操作
+	perror
+	int errno
+	strerror
+	fseek
+		SEEK_SET: 表示文件开头
+		SEEK_CUR: 表示当前位置
+		SEEK_END: 表示文件结尾
+	ftell():
+	rewind():
+
+	实现cp,验证diff
+	cp src dest
+
+=====================================
+sys IO:
+	open():
+	int open(const char *pathname, int flags);
+	第一个参数：表示文件路径
+	第二个参数：表示文件标识
+		O_RDONLY	: 表示只读
+		O_WRONLY	：表示只写
+		O_RDWR		：表示读写
+		O_CREAT		：表示如果文件不存在，则创建文件
+		O_TRUNC		：表示清空文件内容
+		O_APPEND	：表示追加
+		O_NONBLOCK  ：表示取消阻塞
+
+	fopen		open
+	r			O_RDONLY	
+	r+			O_RDWR
+	w			O_WRONLY | O_CREAT | O_TRUNC
+	w+			O_RDWR | O_CREAT | O_TRUNC
+	a			O_WRONLY | O_CREAT | O_APPEND
+	a+			O_RDWR | O_CREAT | O_APPEND
+
+
+	0 ：标准标准  stdin
+	1 ：标准输出  stdout
+	2 ：错误输出  stderr
+
+	返回值：文件描述符（非负正数）
+			返回未被使用文件描述符最小值(针对当前进程)
+			失败：-1
+	
+	一个进程最多可以打开1024个文件描述符
+	#ulimit -n
+
+	close(): 关闭文件
+
+	读文件内容：
+		ssize_t read(int fd, void *buf, size_t count);
+		第一个参数：就是文件描述符
+		第二个参数：表示存储空间
+		第三个参数：表示空间大小
+		返回值：
+			表示获取数据个数(字节)
+			失败：-1
+	写入数据
+		ssize_t write(int fd, const void *buf, size_t count);
+
+	
+	满缓冲：fwrite
+	行缓冲：printf
+	无缓冲：write
+	设定缓冲区属性：
+		int setvbuf(FILE *stream, char *buf, int mode , size_t size);
+		第一个参数：就是文件指针
+		第二个参数：表示缓冲区地址
+		第三个参数：表示设置缓冲区模式：
+			_IONBF unbuffered
+			_IOLBF line buffered
+			_IOFBF fully buffered
+		第四个参数：表示缓冲大小
+
+	cp sysIO
+
+
+
+
+
+
+
+
+
+

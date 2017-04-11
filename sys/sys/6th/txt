@@ -1,0 +1,153 @@
+fork() 创建的进程是独享内存空间  复制父进程的所有资源
+vfork() 创建的进程共享这片内存空间
+execl() 新的进程会替换旧的进程，唯一保留下看就是旧进程的进程号
+孤儿进程：就是父进程退出，子进程还在运行，则这个子进程就会被1号进程所收养，则这个进程就是孤儿进程
+僵尸进程：就是子进程退出，但是资源未被父进程回收，这样，这个子进程就变成僵尸进程。
+守护进程：首先后台进程，循环检测某件事情发生或者等待IO请求的进程。
+	daemon()
+	1 创建一个孤儿进程
+	2 创建新会话 setsid()
+	3 重设当前工作目录 chdir("/")
+	4 关闭文件描述符
+		getrlimit() -> close
+	5 重设默认权限 umask(0)
+
+wait();
+	NULL：表示不接受任何子进程返回信息状态
+exit() _exit() _Exit()；
+
+	mysystem su
+===========================
+进程之间通讯：
+	信号：通过信号模拟中断的一种模式，也叫软中断机制
+
+	查看所有信号：kill -l
+	2) SIGINT 		ctrl + c
+	3) SIGQUIT		ctrl + \
+	6) SIGABRT    	abort()
+	9) SIGKILL		杀死信号
+	13) SIGPIPE		管道信号
+
+	发送信号：
+		int kill(pid_t pid, int sig);
+		第一个参数：进程号
+		第二个参数：表示信号源
+			可以信号值，也可给信号宏名
+	
+
+	接受信号：
+		sighandler_t signal(int signum, sighandler_t handler);
+			typedef void (*sighandler_t)(int);
+			第一个参数：表示信号
+			第二个参数：表示信号执行操作
+				1 忽略操作 屏蔽信号 SIG_IGN
+				2 默认操作	SIG_DFL
+				3 自定义操作 func
+		返回值：
+			失败：SIG_ERR
+			成功：执行函数指针
+
+	两个特殊信号 9 19不可以改变
+
+	闹钟信号 14) SIGALRM
+	alarm()
+
+	发送信号
+	int raise(int sig); 等价于 kill(getpid(), sig);
+
+	等待函数
+	int pause(void);
+	等待接受任意一个信号
+
+	设置定时器
+	int setitimer(int which, const struct itimerval *value,
+	                     struct itimerval *ovalue);
+
+
+	第一个参数：表示设置定时器类型
+		ITIMER_REAL：	表示机器时间		
+				信号：SIGALRM
+				可以处于运行或者阻塞状态
+		ITIMER_VIRTUAL：表示用户态下消耗时间
+				信号：SIGVTALRM
+				必须保证进程一直处于运行状态
+		ITIMER_PROF：   表示用户态加系统态下消耗总时间
+				信号：SIGPROF
+				
+
+	第二个参数：表示设置时间实例
+	struct itimerval {
+		struct timeval it_interval; /* next value */
+				表示循环时间
+		struct timeval it_value;    /* current value */
+				表示第一次执行时间
+	};
+	struct timeval {
+		long tv_sec;                /* seconds */
+				表示设定秒数
+		long tv_usec;               /* microseconds */
+				表示微妙
+		1秒 ＝ 10^6微妙
+	};
+
+	时间参数不可以同时设定为0
+
+	第三个参数：表示上次设定闹钟时间参数 
+		NULL : 表示不考虑上次时间
+
+	练习：要求每个一秒打印hello 两秒打印world
+	
+	homework:
+		封装定时器 链表
+	1  => 1111
+	3  => 3333
+	5  => 5555  *
+	8  => 8888 
+	10 => 1010  *
+	
+	add(time, (void *)data, flag);
+	time
+	falg
+	hello
+	data
+=====================
+管道通讯：必须保证双方都在线
+	管道命令： |
+	管道文件： mkfifo
+
+	匿名管道：虚拟出来 fd[0] fd[1]
+		只能实现父子进程之间或者兄弟之间通讯
+	有名管道：通过管道文件来实现
+		可以实现任意进程之间通讯。
+
+	创建匿名管道
+		int pipe(int filedes[2]);
+		filedes[0] -> read
+		filedes[1] -> write
+
+	如果管道异常，就是有一方不在线，则就会产生一个管道信号。
+	管道大小：64K
+
+	练习：实现 cat /etc/passwd | grep root
+
+	有名管道：
+		就是管道文件进行通讯
+		创建管道文件：
+			int mkfifo(const char *pathname, mode_t mode);
+			第一个参数：文件路径
+			第二个参数：文件模式
+
+	homework:
+		1 实现简单的一对一聊天系统
+			tom_to_jim
+			jim_to_tom
+			tom  ->send
+				 ->recv
+			jim  -> send
+				 ->recv
+	
+
+
+
+
+

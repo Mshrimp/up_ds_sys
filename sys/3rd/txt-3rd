@@ -1,0 +1,180 @@
+dup
+dup2
+fcntl
+stat:
+	char *buf[] = {"---", "--x", "-w-", "-wx", "r--", "r-x", "rw-", "rwx"};
+
+	属主 >> 6
+	rwx => 7
+	rw- => 6
+	r-x => 5
+	r-- => 4
+	-wx => 3
+	-w- => 2
+	--x => 1
+	--- => 0
+	属组： >> 3
+
+	其他用户 
+
+	getpwuid():/etc/passwd
+	getpwnam():
+	getpwent(): 循环获取用户帐号信息
+	void setpwent(void);重新指向文件开头
+	void endpwent(void)；关闭文件
+
+
+	/etc/shadown : 用户密码文件
+	//tom -> md5
+	$1$yJs5o$	: 密钥 加密算法
+	iBgf7HGuSroao.nN45aL80 暗文
+	char *crypt(const char *key, const char *salt);
+	第一个参数：表示用户数据密码明文
+	第二个参数：表示加密算法
+	返回值：就是密码(md5)
+
+	1 :调用crypt函数时候，头文件中返回的是一个整形，但是通过man查找，返回的依然是一个char *, 所以在编译的时候出现类型不匹配，为了解决这个问题，我们需要包含一个宏，且必须写在头文件前面。
+	2 :编译时候要连接库文件: -lcrypt
+
+	struct spwd *getspent();
+	void setspent();
+	void endspent();
+
+	/etc/group:
+
+	getgrgid():
+		打印出所有组成员
+	getgrnam():
+	getgrent():
+	setgrent():
+	endgrent():
+
+	用户：
+	uid_t getuid(void);获取有效用户uid
+	实际用户：表示程序执行者
+	uid_t geteuid(void);获取实际用户uid
+	有效用户：表示程序所有者
+
+	一般情况下，有效用户uid等于实际用户uid
+	则设置特权(属主)
+	chmod u+s 
+
+
+	有效组：
+	实际组：
+	gid_t getgid(void);
+	gid_t getegid(void);
+	chmod g+s
+================================================
+	时间：
+	time_t    st_atime;   /* time of last access */
+	time_t    st_mtime;   /* time of last modification */
+	time_t    st_ctime;   /* time of last status change */
+	time():获取机器时间 单位秒
+	开始时间：1970年1月1日
+	把秒数转换成字符串
+	char *ctime(const time_t *timep);
+	把秒数转换成结构体信息
+	gmtime() : 表示国际标准时间格式
+	struct tm {
+		int tm_sec;         /* seconds */
+		int tm_min;         /* minutes */
+		int tm_hour;        /* hours */
+		int tm_mday;        /* day of the month */
+		int tm_mon;         /* month */ 0 - 11
+		int tm_year;        /* year */ 1900
+		int tm_wday;        /* day of the week */ 0 - 6
+		int tm_yday;        /* day in the year */
+		int tm_isdst;       /* daylight saving time */
+	};
+
+	localtime() : 表示本地时间
+	asctime() : 结构体转换成字符串
+	mktime() : 结构体转换成秒数
+
+	格式化时间
+	size_t strftime(char *s, size_t max, const char *format,
+	                           const struct tm *tm);
+
+	第一个参数：表示存储时间格式地址空间
+	第二个参数：表示存储空间大小
+	第三个参数：表示格式
+	第四个参数：表示时间结构体信息
+
+	表示获取软链接文件源
+	ssize_t readlink(const char *path, char *buf, size_t bufsiz);
+
+	ll
+	
+	获取当前登录用户：
+	getlogin():
+	su - tom:切换用户
+	获取主机名：
+	gethostname()
+	设置主机名
+	sethostname()
+	获取系统信息：
+	uname()
+	struct utsname {
+		char sysname[];  表示系统内核名字
+		char nodename[]; 表示主机名
+		char release[];  表示内核版本
+		char version[];  表示第一次发布时间
+		char machine[];  表示平台
+	#ifdef _GNU_SOURCE
+		char domainname[];
+	#endif
+	};
+
+	打印当前工作目录路径
+	long getcwd(char *buf, unsigned long size)
+	char *get_current_dir_name(void)
+
+	删除文件unlink
+	int unlink(const char *pathname)
+	创建硬链接文件
+	int link(const char *oldpath, const char *newpath);
+	创建软连接：
+	int symlink(const char *oldpath, const char *newpath);
+	设置权限：
+	int chmod(const char *path, mode_t mode);
+	int fchmod(int fildes, mode_t mode);
+	修改属主和属组
+	int chown(const char *path, uid_t owner, gid_t group);
+	int fchown(int fd, uid_t owner, gid_t group);
+	int lchown(const char *path, uid_t owner, gid_t group);
+
+
+	创建目录：
+	int mkdir(const char *pathname, mode_t mode);
+	默认权限：
+	mode_t umask(mode_t mask);
+	删除一个空目录
+	int rmdir(const char *pathname);
+	删除一个文件或者目录
+	int remove(const char *pathname);
+	改名或者移动
+	int rename(const char *oldpath, const char *newpath);
+	切换目录
+	int chdir(const char *path);
+
+
+	目录：
+	打开目录
+		opendir
+	读取目录内容
+		readdir
+	关闭目录
+		closedir
+	指定目录开头
+		rewinddir
+	
+	实现tree
+
+
+
+
+
+
+
+

@@ -1,0 +1,119 @@
+udp:
+	客户端：发送数据
+		1 创建套接子
+		2 发送数据
+			sendto()
+		3 关闭套接子描述符
+	服务器：接受数据
+		1 创建套接子
+		2 帮定端口
+		3 接受数据
+			recvfrom()
+		4 关闭
+
+		write read
+		send recv
+
+broadcast:
+	向同意网段的所有主机发送数据
+	是在udp基础上建立起来
+		设置广播：
+		int setsockopt(int s, int  level,  int  optname,  const  void
+		       *optval, socklen_t optlen);
+
+		第一个参数：表示套接子文件描述符
+		第二个参数：级别：
+			SOL_SOCKET ： 表示一般套接子
+		第三个参数：表示模式：
+			广播SO_BROADCAST
+		第四个参数：表示是否启用广播
+			0 表示不启用
+			非零 表示启用
+		第五个参数：表示是否启用广播大小
+		返回值：成功：0
+				失败：-1
+
+mul:多播或者组播
+	向同一个添加到这个多播组的用户发送信息。
+	224.1.2.3
+
+	send.c
+
+	setsockopt()
+	第一个参数：表示文件描述符
+	第二个参数：IPPROTO_IP 表示使用ip协议
+	第三个参数：IP_MULTICAST_LOOP 表示不可以回环发送
+	第四个参数：开关
+	第五个参数：开关长度
+	
+
+	recv.c:
+		
+	问题：
+		1 关闭防火墙和selinux安全包
+			防火墙：
+				service iptables stop
+				chkconfig --level 0123456 iptables off
+			selinux
+				vim /etc/selinux/config
+				修改SELINUX=enabled 改成 disabled
+		2 设置网卡信息
+			设置网卡模式为动态模式
+			/etc/sysconfig/network-scripts/ifcfg-eth0
+			DEVICE=eth0					表示设备名
+			BOOTPROTO=dhcp				设置为动态模式
+				static : 静态模式
+			HWADDR=00:0C:29:08:96:7D	表示物理地址
+			ONBOOT=yes					表示启动网卡
+			TYPE=Ethernet				表示协议
+
+		3 确保接受数据用户处于同一多播组号中。
+		 224.0.0.0 ~ 239.255.255.255
+=================================
+	io复用
+	int select(int nfds, fd_set *readfds, fd_set *writefds,
+	                  fd_set *exceptfds, struct timeval *timeout);
+
+
+	void FD_CLR(int fd, fd_set *set);	表示从集合中删除
+	int FD_ISSET(int fd, fd_set *set);	
+		判断文件描述符中是否有可读内容，如果文件中有数据，则该宏成立
+		如果文件中没有数据，则该宏不成立.
+
+	void FD_SET(int fd, fd_set *set);   表示添加文件描述符到集合中
+	void FD_ZERO(fd_set *set);			表示清空集合
+
+	第一个参数：表示打开文件描述符最大值 + 1
+	第二个参数：表示文件描述符读集
+	第三个参数：表示文件描述符写集
+	第四个参数：表示文件描述符错误信息集合
+	第五个参数：表示时间
+		3种状态：
+			NULL : 表示阻塞状态
+			0.0  : 表示非阻塞状态
+			m.n  : 表示阻塞等待m秒n微妙
+			struct timeval
+			struct timeval {
+				long    tv_sec;         /* seconds */
+					表示秒
+				long    tv_usec;        /* microseconds */
+					表示微妙 10^6
+			};
+
+	返回值：
+		成功：返回文件描述符
+		失败：-1
+		超时：0
+
+
+
+
+
+
+
+
+
+
+
+
+

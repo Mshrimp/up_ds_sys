@@ -1,0 +1,98 @@
+kernel:
+	1 文件系统
+		ext3
+	2 进程管理
+	3 内存管理
+	4 设备驱动
+	5 网络协议
+
+sys io -> file io
+	open -> 文件描述符
+		错误宏
+		errno
+		perror()
+	close
+
+	read():
+	write():
+	cp:
+
+	int open(const char *pathname, int flags, mode_t mode);
+	第三个参数：表示指定文件权限
+		mode & ~umask ：表示文件权限
+		0022
+
+		umask()：临时设定当前进程的默认文件权限。
+	int creat(const char *pathname, mode_t mode);
+	默认标志位：
+		O_WRONLY | O_TRUNC | O_TREAT
+
+		creat("./test", 0666) <==> open("./test", O_CREAT | O_TRUNC | O_WRONLY, 0666)
+
+	文件指针偏移：
+	lseek():
+		off_t lseek(int fildes, off_t offset, int whence);
+
+	复制文件描述符
+		int dup(int oldfd);
+		int dup2(int oldfd, int newfd);
+		如果新的文件描述符被使用，则会先关闭新的文件描述符，然后再把旧的文件描述符复制给新的文件描述符。
+		
+	获取文件属性信息：
+	int fcntl(int fd, int cmd);
+	int fcntl(int fd, int cmd, long arg);
+	int fcntl(int fd, int cmd, struct flock *lock);
+
+	第一个参数：表示打开文件描述符
+	第二个参数：表示对文件所执行操作
+		F_DUPFD ： 表示复制文件描述符
+		F_GETFD	： 表示获取文件描述符标识	
+		F_SETFD ： 获取的设置
+		F_GETFL ： 表示获取文件状态信息
+		F_SETFL ： 表示获取的状态设置进去
+			On Linux this command  can  only  change  the   O_APPEND,   O_ASYNC, O_DIRECT, O_NOATIME, and O_NONBLOCK flags.
+	第三个参数： 表示供命令使用参数
+		
+
+	控制设备函数：
+		int ioctl(int d, int request, ...);
+		第一个参数：表示文件描述符
+		第二个参数：表示设备指定命令
+		后面参数:	表示对命令补充。
+
+	案例：获取终端大小
+		返回值：成功 0
+				失败 -1
+
+	对用户而言：获取文件状态信息
+	int stat(const char *path, struct stat *buf);
+	第一个参数：文件路径
+	第二个参数：表示存储文件信息结构体
+	返回值：
+		失败：－1
+		成功：0
+
+	uid -> name
+	获取到uid得到结构体信息
+		struct passwd *getpwuid(uid_t uid);
+		struct passwd *getpwnam(const char *name);
+
+	获取gid得到结构体信息
+		struct passwd *getpwnam(const char *name);
+		struct group *getgrgid(gid_t gid)；
+
+
+	实现：
+		ls -l filename
+		ls -l - h filename
+	
+
+		1970 1 1
+
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+sort:
+	交换排序： -> 选择排序变种
+	选择排序：
+	冒泡排序：
+	插入排序：
+	快速排序：
+		void qsort(void *base, size_t nmemb, size_t size,
+		                  int(*compar)(const void *, const void *));
+		第一个参数：表示数据首地址地址
+		第二个参数：表示数据长度
+		第三个参数：表示数据类型
+		第四个参数：表示比较函数
+find:
+	一般查找法：
+	二分查找法：
+		void *bsearch(const void *key, const void *base, size_t nmemb,
+		              size_t size, int (*compar)(const void *, const void *));
+			第一个参数：表示关键字
+			第二个参数：表示基数
+			第三个参数：表示数据长度
+			第四个参数：表示类型
+			第五个参数：比较函数
+
+1 学生管理系统 －》 链表
+	主界面模块
+	管理员模块
+	教师模块
+	学生模块
+2 学生排课系统 -> 内核链表
+3 实现链栈 数队 链队
+4 预习哈西 树

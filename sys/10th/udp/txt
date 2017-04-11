@@ -1,0 +1,35 @@
+tcp:
+	可以保障数据可靠传输
+udp:
+	保证数据更快传输，但是可能存在数据丢失。
+	一方只负责发送
+	另一个负责接受。
+
+send:
+	1 创建套接子
+	2 发送数据
+	ssize_t sendto(int s, const void *buf, size_t len, int flags,
+	       const struct sockaddr *to, socklen_t tolen);
+	第一个参数：表示套接子文件描述符
+	第二个参数：表示发送数据
+	第三个参数：表示发送数据大小
+	第四个参数：表示标志位 0
+	第五个参数：表示目标帮定地址
+	第六个参数：表示地址空间大小
+	返回值：
+		成功：表示发送了多少数据(字节)
+		失败：-1
+
+recv:
+	1 创建套接子
+	2 帮定端口
+	3 接受
+		ssize_t recvfrom(int s, void *buf, size_t len, int flags,
+		                        struct sockaddr *from, socklen_t *fromlen);
+
+
+
+	
+	广播：
+	多播：
+	组播：

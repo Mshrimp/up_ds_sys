@@ -1,0 +1,172 @@
+信号：
+	信号源：kill -l
+	发送信号：kill raise
+	接受信号：signal()
+		1 忽略模式	SIG_IGN
+		2 默认模式	SIG_DFL
+		3 自定义：	func
+		返回值：
+			错误：SIG_ERR
+			正确：指向信号执行函数
+	9 19
+
+	闹钟信号
+		14 alarm() 秒
+		开始时间
+		循环时间
+	setitimer() : 定时器设定函数
+		
+管道：
+	匿名管道：
+		pipe
+		fd[0] => read 
+		fd[1] -> write
+	有名管道：
+		mkfifo
+		open -> fd
+		read
+		write
+
+
+	cat /etc/passwd | grep a.out
+	exec家族函数
+	fork()
+	pipe
+	dup dup2
+=========================================
+消息队列：就是为了解决对方不在线问题
+	1 创建消息队列
+		int msgget(key_t key, int msgflg)
+		第一个参数：表示创建信息队列的关键字
+			key_t ftok(const char *pathname, int proj_id);
+			第一个参数：表示文件路径(文件一定要存在)
+			第二个参数：表示创建关键字序列号
+			返回值：成功：则得到关键字(int)
+					inode => 16 => A
+					proj_id => 16 => B
+					key => BA
+					失败：-1
+		第二个参数：表示创建消息队列标志
+			IPC_CREAT ：表示如果消息队列不存在，则创建
+			IPC_EXCL ： 判断消息队列是否存在，
+
+		返回值：成功：返回消息队列描述符
+				失败: -1
+
+
+	查看消息队列：
+		ipcs -q
+	删除消息队列：
+		ipcrm -q 98307
+	按关键字删除：
+		ipcrm -Q 0x0b02f3c1
+
+
+	2 发送数据
+		int  msgsnd(int  msqid,  const  void *msgp, size_t msgsz, int
+		       msgflg);
+		第一个参数：表示消息队列描述符
+		第二个参数：表示数据
+		第三个参数：表示数据大小
+		第四个参数：表述属性
+			0 ：表示阻塞方式等待
+		失败 －1
+		成功 0
+	3 接受数据
+		ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msg-
+		       typ, int msgflg);
+
+		第一个参数：表示消息队列描述符
+		第二个参数：表示存储空间
+		第三个参数：表示空间大小
+		第四个参数：表示数据类型
+			0 ：表示不考虑数据类型
+		第五个参数：表示属性 0
+
+	练习：
+		strucrt cls_t{
+			char name[128];
+			int age;
+			int sex;
+		};
+
+	销毁消息队列
+		int msgctl(int msqid, int cmd, struct msqid_ds *buf);
+		第一个参数：表示消息队列描述符
+		第二个参数：表示对消息队列操作命令
+			IPC_STAT ： 表示获取状态信息
+			IPC_SET  ： 表示设置信息状态
+			IPC_RMID ： 表示删除消息队列
+		第三个参数：表示消息队列状态信息
+
+======================================================
+共享内存：
+	1 创建共享内存
+		int shmget(key_t key, size_t size, int shmflg);
+		第一个参数：关键字 ftok
+		第二个参数：共享内存大小
+		第三个参数：表示标志位
+
+	查看ipcs -m
+
+	2 映射共享内存到进程中
+	void *shmat(int shmid, const void *shmaddr, int shmflg);
+	第一个参数：表示shmget返回值
+	第二个参数：表示指定空间地址，
+			一般给NULL, 表示由系统自动分配地址给进程
+	第三个参数：表示映射共享内存标识
+		SHM_RDONLY ： 表示只读
+		默认给0 : 表示读写方式
+
+	3 取消映射
+	int shmdt(const void *shmaddr);
+
+	4 取消共享内存
+	int shmctl(int shmid, int cmd, struct shmid_ds *buf);
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+信号量 进程互斥锁机制
+
+	1 创建信号量
+		int semget(key_t key, int nsems, int semflg);
+		第一个参数：表示关键字
+		第二个参数：表示信号锁个数
+		第三个参数：标志位
+
+	2 初始化这把锁
+		int semctl(int semid, int semnum, int cmd, ...);
+		第一个参数：表示semget返回值
+		第二个参数：表示锁索引号，从0开始
+		第三个参数：命令
+			IPC_STAT：
+			IPC_SET：
+			IPC_RMID：
+			SETALL ： 设置这把锁
+		第四个参数：
+			负数表示解锁 正数表示加锁
+
+	3 加锁和解锁
+		int semop(int semid, struct sembuf *sops, unsigned nsops);
+		unsigned short sem_num;  /* semaphore number */
+			锁编号
+		short          sem_op;   /* semaphore operation */
+			加锁还是解锁
+			解锁：正数
+			加锁：负数
+		short          sem_flg;  /* operation flags */
+			0
+
+		第三个参数：表示所的个数
+
+
+
+
+
+
+
+
+
+
+
+
+
+

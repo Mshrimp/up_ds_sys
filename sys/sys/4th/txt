@@ -1,0 +1,178 @@
+1 默认权限：
+	文件：  666 - umask = 
+			mode & (~umask) = 
+	目录：  777 - umask
+			mode & (~umask) 
+
+	umask()：只是针对这个程序起作用
+2 切换目录：
+	int chdir(const char *path);
+	int fchdir(int fd); -> open
+
+	只是针对程序起作用
+3 链接文件：
+	硬链接：ln
+		link
+		int link(const char *oldpath, const char *newpath);
+	软链接：ln -s
+		symlink
+	
+	注意：如果跨目录，则需要指定源绝对路径
+
+	绝对路径：从/开始路径
+	相对路径：从当前的工作目录开始
+
+
+目录：
+	打开目录
+	DIR *opendir(const char *name);
+	返回值：
+		失败：NULL
+		成功：就是目录指针
+
+	读取目录内容
+	struct dirent *readdir(DIR *dir);
+	
+	关闭文件内容
+	int closedir(DIR *dir);
+
+	tree
+	rm -rf
+
+	find .c
+	int glob(const char *pattern, int flags,
+	                int errfunc(const char *epath, int eerrno),
+					                glob_t *pglob);
+	查找匹配文件信息
+	第一个参数：表示路径
+	第二个参数：表示标识 排序 0
+	第三个参数：表示错误报告信息 NULL
+	第四个参数：表示查找信息存放这样结构体中
+============================================
+进程：
+	一段可执行代码如果放在硬盘中，则只能说明它是一个文件，如果拷贝在内存中，并获得CPU资源，则这段程序就是一个进程。
+	每一个进程都有进程id
+
+	pid_t getpid(void); 表示当前进程的进程号
+	进程号是由系统自动给分配进程号，不由用户自己指定
+	pid_t getppid(void);表示父进程的进程号
+	子进程会依赖父进程。
+
+查看进程：
+	ps -ef ：显示所有进程
+		前台进程
+		后台进程
+		服务进程：就是守护进程
+		守护进程：就是脱离开终端
+
+	杀死进程：kill -9 pid
+			  pkill -9 filename
+	1号进程：祖先进程 init [5]
+		就是说所有进化都是由1号直接或者间接创建
+		1号进程杀不死
+		0 ：交换分区
+		/sys /proc
+	init [5] : 表示图形界面模式
+	模式共有7中 0 - 6
+	vim /etc/inittab
+	# Default runlevel. The runlevels used by RHS are:
+	#   0 - halt (Do NOT set initdefault to this) 关机
+	#   1 - Single user mode 单用户模式
+	#   2 - Multiuser, without NFS (The same as 3, if you do not have networking)
+		多用户模式 不支持网络
+	#   3 - Full multiuser mode
+		多媒体模式 ，支持网络
+	#   4 - unused 保留
+	#   5 - X11    图形界面
+	#   6 - reboot (Do NOT set initdefault to this) 重启
+	# 
+
+	状态(进程显示状态)：
+	man ps 	
+	D    Uninterruptible sleep (usually IO) 不可中断睡眠状态
+	R    Running or runnable (on run queue) 表示运行或者可运行状态
+	S    Interruptible sleep (waiting for an event to complete)
+		表示可中断睡眠状态
+	T    Stopped, either by a job control signal or because it is being
+	     traced.
+		 表示暂停状态或者追踪状态
+	W    paging (not valid since the 2.6.xx kernel)
+		表示kernel中运行程序
+	X    dead (should never be seen)
+		表示退出状态
+	Z    Defunct ("zombie") process, terminated but not reaped by its
+		  parent.
+		 表示僵尸进程
+
+
+	五态模型(运行)：
+	新建态：就是进程刚刚被创建并没有被提交状态，并等待系统分配进程表相及资源表格(打开文件，分配缓冲区)，分配地址空间等等。
+	就绪态：进程已经被创建，等待CPU分配运行条件。
+	运行态：就是进程被拷贝到内存中，并处于运行状态
+	阻塞态：因某件事情/io请求而处于阻塞状态，也叫挂起状态。
+	终止态：就是进程退出，则其他进程回收进程创建事所分配所有信息资源。
+
+
+
+	子进程可以运行：
+		子进程是由父进程创建，同时会复制父进程所有资源，就是环境变量
+
+	查看环境变量：env
+		定义：export
+	局部变量： set
+
+	获取环境变量：
+		char *getenv(const char *name);
+	设置环境变量：临时修改
+		int setenv(const char *name, const char *value, int overwrite);
+		第一个参数：表示环境变量变量名
+		第二个参数：表示变量值
+		第三个参数：表示是否设置变量值
+			0 ： 表示不设置
+			!0 : 表示设置
+
+	修改环境变量：
+		int putenv(char *string);
+		格式：name=value
+	vim /etc/sysconfig/network
+	
+	取消环境变量：
+	int unsetenv(const char *name);
+
+	取消所有环境变量
+	int clearenv(void)
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+	创建进程：
+	pid_t fork(void);
+	返回值：
+		child_pid => parnet
+		o => child
+		-1 => failed
+
+	子进程是父进程一个副本，复制父进程资源，包括进程上下文切换，进程堆栈，打开文件描述符，信号控制设定，进程组号，当前工作目录，根目录。资源限额，控制终端等。唯一不同的是进程号，同时每一个进程都有自己的一段运行时段(临时堆栈)。
+
+	特性：
+		动态性：动态产生，动态消亡过程。
+		并发行：任意进程都可以同其他进程并发执行。
+		独立性：每一个进程都是独立运行基本单位。
+		异步性：由于进程之间相互制约，是进程具有执行间断性。
+
+
+
+	创建一个进程，父进程打开文件，写数据
+	1 ：看子进程是否可以操作这个文件
+	2 ：如果子进程可以写入数据 关闭，看父进程是否可以写入(sleep)。写方式
+	3 ：父子进程循环写入多个数据，看数据是否会混乱。
+
+	退出函数：
+	等待函数：
+	实现tree
+
+
+
+
+
+
+
+

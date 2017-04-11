@@ -1,0 +1,161 @@
+opendir()
+readdir()
+	struct dirent 
+
+	d => 4
+	- => 8
+closedir
+glob()
+chdir()
+
+tree
+
+pid:
+	getpid getppid getpgrp
+	pid_t getpgid(pid_t pid);获取某一进程进程组号
+	pid_t getpgrp(void)；获取当前进程进程组号
+	pid_t getsid(pid_t pid);获取会话id
+
+	进程：就是一段可执行代码(内存)。
+	父进程：就是执行这段代码的一个终端。
+	进程组：就是由一个或者多个进程组成的一个集合
+	会话：就是一个进程组或者多个进程组组成的一个集合。
+
+	fork()
+	wait():
+		确保子进程先运行，要回收子进程资源。
+
+
+	孤儿进程：
+		父进程退出，而子进程还处于运行状态，而这个子进程就会被1号进程收养，变成孤儿进程。
+
+	僵尸进程：
+		子进程退出，而父进程还没有回收子进程资源，而这个子进程就变成僵尸进程，
+	僵尸进程杀不死。
+
+	进程退出：
+		8种方式：
+		5种正常退出：
+			1 从main返回 return  
+				main 0 ~ 255
+				other -2147483648 ~ 2147483647
+			2 调用exit退出 0 ~ 255
+			3 调用_exit或者_Exit
+			4 最后一个线程从启动例程退出
+			5 最后一个线程pthread_exit
+		3异常退出：
+			1 调用abort()
+			2 接受一个信号而退出 kill -9
+			3 多线程的非法退出
+
+
+	return 和 exit区别：
+	1 return 是一个关键字，而exit是一个函数
+	2 return 属于语句级别的，它表示调用堆栈返回。
+		exit 属于系统级别的，他表示的是一个进程退出。
+	3 exit 将会删除进程内存空间，同时把错误信息返回父进程，而return只是退出当前函数，返回是一个函数值。
+	4 exit退出是把控制权交给操作系统，而return 是把控制权交给函数。
+
+
+	exit() 退出会刷新缓冲区，关闭文件描述符，释放内存空间。
+	_exit() 或者_Exit() 则不会刷新缓冲区。
+
+	因为exit会调用一个退出函数atexit
+		int atexit(void (*function)(void));
+	注册顺序和函数执行顺序是相反的
+
+	
+	pid_t wait(int *status); 判断进程状态
+	WIFEXITED(status) : 表示调用exit或者_exit函数，说明正常退出
+		判断子进程是正常退出还是异常退出
+		如果是正常退出，结果为1
+		如果是异常退出，则结果为0
+	WEXITSTATUS(status)：如果正常退出，则返回exit的函数值
+	WIFSIGNALED(status) : 表示异常退出
+		如果是异常退出，则结果为1
+		如果不是异常退出，则结果为0
+	WTERMSIG(status) ： 表示异常退出信号值
+		kill -l : 表示显示所有信号
+		abort() => 6号信号
+	pthread_t pthread_self(void); 线程号
+	线程库 -lpthread
+
+	练习：实现3000 ~ 6000之间素数个数
+	创建10个进程来实现 
+	素数：只能被自己整数的数就是素数
+	
+	守护进程：
+		int daemon(int nochdir, int noclose);
+
+	1 首先则需要创建一个孤儿进程
+	2 调用setsid() 创建新的会话
+		1>:摆脱源控制终端的影响
+		2>:摆脱原进程组控制
+		3>:摆脱原会话控制
+
+	使子进程成为进程组组长，同时也是会话组组长。
+	3 切换工作目录
+	4 关闭文件描述符
+		
+
+	获取资源限制
+		int getrlimit(int resource, struct rlimit *rlim);
+		第一个参数：表示资源
+			RLIMIT_NOFILE ：表示获取文件描述符最大值
+		第二个参数：表示获取资源结构体信息
+		struct rlimit {
+			rlim_t rlim_cur;  /* Soft limit */
+			系统强加给资源限制
+			rlim_t rlim_max;  /* Hard limit (ceiling for rlim_cur) */
+			表示所能达到软限制的最大值
+		};
+
+		如果获取的资源限制为-1，则表示无限制
+
+		表示设置资源限额：
+		int setrlimit(int resource, const struct rlimit *rlim);
+	
+	练习：
+		创建一个守护进程实现每秒向一个临时文件发送一段错误报告。
+			
+
+	进程执行外部命令：
+	int execl(const char *path, const char *arg, ...);
+	第一个参数：表示命令路径
+	第二个参数：表示执行命令
+		... :   表示命令参数
+	int execlp(const char *file, const char *arg, ...);
+	int execle(const char *path, const char *arg,
+			..., char * const envp[]);
+	int execv(const char *path, char *const argv[]);
+	int execvp(const char *file, char *const argv[])
+	int execve(const char *filename, char *const argv[],
+	                  char *const envp[]);
+				filename : 表示绝对路径
+
+	替换原来进程的所有数据，只保留原进程的进程号，执行依然从main开始执行
+
+	创建进程
+	pid_t vfork(void)
+
+	1 确保子进程先运行
+	2 子进程不可以用return 出现段错误
+	3 父子进程共享这片内存空间
+
+	mysystem:
+	su - username
+
+	进程之间通讯
+		信号：
+		管道：
+		消息队列：
+		共享内存：
+		信号量：
+
+
+
+
+
+
+
+

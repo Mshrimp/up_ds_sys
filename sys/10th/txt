@@ -1,0 +1,57 @@
+tcp:
+	三次握手机制原理
+
+客户端：
+	1 创建链接套接子
+		socket()
+	2 链接
+		connect() : 表示目标地址 man 7 ip
+			AF_INET => PF_INET => 2
+			/usr/include/bits/socket.h
+			主机字节序转换成网络字节序 htons()
+			ip => char * => inet_addr
+	3 发送数据
+		write() read() => socket()
+	4 关闭套接子
+		close
+服务器：
+	1 创建链接套接子 负责链接
+		socket()
+	2 帮定端口号 服务端口
+		bind() => 帮定本机地址 => INADDR_ANY（表示本机ip地址）
+			htonl(INADDR_ANY);
+			inet_network("2.2.2.108");
+	3 监听
+		listen => socket()
+	4 接受数据 	负责发送和接受数据 数据端口
+		accept() 地址表示是目标地址
+	5 获取数据
+		read() write()
+	6 关闭套接子
+		close()
+
+大端和小端：
+	小端：主机
+	大端：网络
+
+	高地址和底址地：
+	高字节和底字节：
+
+	发送数据：
+		ssize_t send(int s, const void *buf, size_t len, int flags);
+		第一个参数：表示文件描述符 套接子
+		第二个参数：表示数据
+		第三个参数：表示数据大小
+		第四个参数：标志位 0
+	接受数据：
+		ssize_t recv(int s, void *buf, size_t len, int flags);
+
+		返回值：成功：表示接受数据个数
+				失败：-1
+
+
+	inet_addr : 把主机ip地址转换成网络二进制数据
+	inet_network : 把主机ip地址转换成二进制数据
+
+
+
