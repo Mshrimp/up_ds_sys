@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
 	fd = open(argv[1], O_CREAT);
 	if (fd == -1)
 	{
+		perror("open");
 		return -1;
 	}
 

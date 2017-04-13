@@ -21,6 +21,7 @@ int main(void)
 
 	printf("O_WRONLY = %#o\n", O_WRONLY);
 	printf("O_CREAT = %#o\n", O_CREAT);
+	printf("O_TRUNC = %#o\n", O_TRUNC);
 
 	return 0;
 }
